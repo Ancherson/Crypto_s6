@@ -4,6 +4,7 @@ def print_doubleByte(varName,value) :
     for i in range (len(value)):
         print(varName + str(i) + " : " + value[i] + " = " + db_to_chr(value [i]))
 
+# Converts a doubleByte into a character
 def db_to_chr(db):
     i = 0
     p = 0
@@ -73,6 +74,7 @@ def D(y,k):
     MAIN
 '''
 
+## Key Gen
 generated_keys = []
 k = G()
 
@@ -95,6 +97,7 @@ cyphered = E(message,k)
 print("Message crypté y :")
 print_doubleByte("y", cyphered)
 
+# Decryption
 message = D(cyphered,k)
 print("Message Décrypté : ")
 print_doubleByte("d",message)
