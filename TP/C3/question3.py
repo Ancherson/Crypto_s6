@@ -6,7 +6,9 @@ Réponse question 2:
     (Pour l'anglais et le français c'est E)
     On trouve ainsi tous les k[i] et on décrypte le texte en appliquant l'algo de chiffrement (qui sert aussi à déchiffrer) au texte chiffré.
 
-    Une méthode plus élaborée serait de prendre en compte les M lettres les plus fréquentes et essayer de trouver la clé pour chacune de ces lettres.
+    Une méthode plus élaborée serait de prendre en compte les M lettres les plus fréquentes et essayer de trouver la clé pour chacune de ces lettres,
+    puis de conserver la plus probable parmi elles. Pour cela on fait une moyenne de fréquence sur les autres M lettres du top.
+    Cela permet de se débarrasser d'un trop fort biais.
 '''
 
 ### DEBUT DU FICHIER POUR LA QUESTION 3
