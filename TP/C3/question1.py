@@ -36,7 +36,7 @@ def to_doubleByte(x):
     return result
 
 # Calculates a XOR
-def xor(x,k) :
+def xor_db(x,k) :
     result = ""
     for i in range (len(x)):
         result += str((int(x[i]) + int(k[i]))%2)
@@ -63,8 +63,14 @@ def G() :
 def E(x,k): 
     y = []
     for i in range (len(x)):
-        y.append(xor(x[i],k[i%4]))
+        y.append(xor_db(x[i],k[i%4]))
     return y
+
+def E_to_text(e):
+    text=""
+    for elem in e:
+        text+= db_to_chr(elem)
+    return text
 
 def D(y,k):
     return E(y,k)
@@ -74,30 +80,33 @@ def D(y,k):
     MAIN
 '''
 
-## Key Gen
-generated_keys = []
-k = G()
-
-while (k in generated_keys):
+def main():
+    ## Key Gen
+    generated_keys = []
     k = G()
 
-generated_keys.append(k)
-print("Clé générée :")
-print_doubleByte("k",k)
+    while (k in generated_keys):
+        k = G()
 
-while (k in generated_keys):
-    k = G()
-generated_keys.append(k)
+    generated_keys.append(k)
+    print("Clé générée :")
+    print_doubleByte("k",k)
 
-## Encryption
-message = to_doubleByte(input("Message à crypter x : "))
-print_doubleByte("x",message)
+    while (k in generated_keys):
+        k = G()
+    generated_keys.append(k)
 
-cyphered = E(message,k)
-print("Message crypté y :")
-print_doubleByte("y", cyphered)
+    ## Encryption
+    message = to_doubleByte(input("Message à crypter x : "))
+    print_doubleByte("x",message)
 
-# Decryption
-message = D(cyphered,k)
-print("Message Décrypté : ")
-print_doubleByte("d",message)
+    cyphered = E(message,k)
+    print("Message crypté y :")
+    print_doubleByte("y", cyphered)
+
+    # Decryption
+    message = D(cyphered,k)
+    print("Message Décrypté : ")
+    print_doubleByte("d",message)
+
+##main()
