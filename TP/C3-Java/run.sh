@@ -4,4 +4,4 @@ fi
 
 javac -d class Main.java
 
-java -cp class Main $1
+java -Xmx4096m -cp class Main $1

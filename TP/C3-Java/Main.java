@@ -141,13 +141,14 @@ public class Main {
         }
         // Get the most frequent letter in each table : we associate it with E because
         // we suppose that the text is in English (or French)
-        ArrayList<Character> mostFreq = freq.getMaxFreq();
+        char[] mostFreq = new char[4];
+        mostFreq = freq.getMaxFreq();
         byte[][] b1 = Utils.toDoubleByte("E");
 
         byte[][] crackedKey = new byte[4][2];
 
-        for (int i = 0; i < mostFreq.size(); i++) {
-            byte[][] b2 = Utils.toDoubleByte(Character.toString(mostFreq.get(i)));
+        for (int i = 0; i < mostFreq.length; i++) {
+            byte[][] b2 = Utils.toDoubleByte("" + mostFreq[i]);
             crackedKey[i][0] = Utils.xor(b1[0][0], b2[0][0]);
             crackedKey[i][1] = Utils.xor(b1[0][1], b2[0][1]);
         }

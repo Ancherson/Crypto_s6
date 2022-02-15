@@ -8,15 +8,16 @@ import java.util.HashMap;
  * @author Nico
  */
 public class FreqTable {
-    private ArrayList<HashMap<Character, Integer>> freq;
+    // private ArrayList<HashMap<Character, Integer>> freq;
+    private HashMap<Character, Integer> freq[];
 
     /**
      * Constructor
      */
     public FreqTable() {
-        freq = new ArrayList<HashMap<Character, Integer>>(4);
+        freq = new HashMap[4];
         for (int i = 0; i < 4; i++) {
-            freq.add(new HashMap<Character, Integer>());
+            freq[i] = new HashMap<Character, Integer>();
         }
     }
 
@@ -27,12 +28,9 @@ public class FreqTable {
      * @param tableIndex     the index in freq
      * @param tableCharIndex the key character
      */
-    public void add(int tableIndex, Character tableCharIndex) {
-        if (freq.get(tableIndex).containsKey(tableCharIndex)) {
-            freq.get(tableIndex).put(tableCharIndex, freq.get(tableIndex).get(tableCharIndex) + 1);
-        } else {
-            freq.get(tableIndex).put(tableCharIndex, Integer.valueOf(1));
-        }
+    public void add(int tableIndex, char tableCharIndex) {
+        int occ = freq[tableIndex].getOrDefault(tableCharIndex, 0);
+        freq[tableIndex].put(tableCharIndex, occ + 1);
     }
 
     /**
@@ -40,7 +38,7 @@ public class FreqTable {
      * 
      * @return the frequency tables
      */
-    public ArrayList<HashMap<Character, Integer>> getFreq() {
+    public HashMap<Character, Integer>[] getFreq() {
         return freq;
     }
 
@@ -49,21 +47,23 @@ public class FreqTable {
      * 
      * @return an arraylist with the most frequent character in each table
      */
-    public ArrayList<Character> getMaxFreq() {
-        ArrayList<Character> list = new ArrayList<>(4);
+    public char[] getMaxFreq() {
+        char[] mostFreq = new char[4];
+        int count = 0;
         for (HashMap<Character, Integer> hm : freq) {
-            Character max = 0;
-            Integer m = 0;
+            char max = 0;
+            int m = 0;
 
-            for (Character c : hm.keySet()) {
-                if (hm.get(c).intValue() > m.intValue()) {
+            for (char c : hm.keySet()) {
+                if (hm.get(c) > m) {
                     max = c;
                     m = hm.get(c);
                 }
             }
-            list.add(max);
+            mostFreq[count] = max;
+            count++;
         }
-        return list;
+        return mostFreq;
     }
 
 }
