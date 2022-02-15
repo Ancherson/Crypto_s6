@@ -3,7 +3,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

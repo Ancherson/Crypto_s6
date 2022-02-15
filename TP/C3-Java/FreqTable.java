@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,6 +13,7 @@ public class FreqTable {
     /**
      * Constructor
      */
+    @SuppressWarnings("unchecked")
     public FreqTable() {
         freq = new HashMap[4];
         for (int i = 0; i < 4; i++) {
