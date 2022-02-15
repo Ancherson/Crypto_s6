@@ -34,8 +34,8 @@ public class Main {
     public static Message E(Message m, Key k) {
         byte[][] cyphered = new byte[m.getBytes().length][2];
         for (int i = 0; i < m.getBytes().length; i++) {
-            cyphered[i][0] = Utils.xor(m.getBytes()[i][0], m.getBytes()[i][0]);
-            cyphered[i][1] = Utils.xor(m.getBytes()[i][1], m.getBytes()[i][1]);
+            cyphered[i][0] = Utils.xor(m.getBytes()[i][0], k.getK()[i % 4][0]);
+            cyphered[i][1] = Utils.xor(m.getBytes()[i][1], k.getK()[i % 4][1]);
         }
 
         return new Message(cyphered);
@@ -102,7 +102,7 @@ public class Main {
         System.out.println("==========EXERCICE 3==========");
         // Read the text (file or manual input)
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter a path to cyphered file :");
+        System.out.println("Enter a path to a raw file :");
         String s = sc.nextLine();
         try {
             Path path = Paths.get(s);
@@ -117,7 +117,11 @@ public class Main {
                 s = s.replaceAll("[^\\p{ASCII}]", "");
                 s = s.replaceAll("\\W", "");
                 s = s.toUpperCase();
-                System.out.println("Text formated successfully.");
+                System.out.println("Formatted text : \n" + s);
+            } else {
+                System.out.println("The argument must be a path !");
+                sc.close();
+                System.exit(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,6 +130,9 @@ public class Main {
         } finally {
             sc.close();
         }
+
+        Message mess = E(new Message(s), new Key());
+        s = mess.getMessage();
 
         // Make the frequency tables
         FreqTable freq = new FreqTable();

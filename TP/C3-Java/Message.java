@@ -49,6 +49,15 @@ public class Message {
     /**
      * Getter
      * 
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Getter
+     * 
      * @return the byte array
      */
     public byte[][] getBytes() {

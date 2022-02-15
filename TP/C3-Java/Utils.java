@@ -13,15 +13,17 @@ public class Utils {
      */
     public static byte[][] toDoubleByte(String message) {
         try {
-            byte[][] byteMessage = new byte[message.length() + 1][2];
+            byte[][] byteMessage = new byte[message.length()][2];
+
             byte[] b = message.getBytes("UTF-16");
-            for (int i = 0; i < b.length; i++) {
+            for (int i = 2; i < b.length; i++) {
                 if (i % 2 == 0) {
-                    byteMessage[i / 2][0] = b[i];
+                    byteMessage[(i - 2) / 2][0] = b[i];
                 } else {
-                    byteMessage[i / 2][1] = b[i];
+                    byteMessage[(i - 2) / 2][1] = b[i];
                 }
             }
+
             return byteMessage;
         } catch (Exception e) {
             e.printStackTrace();
@@ -32,6 +34,6 @@ public class Utils {
     }
 
     public static byte xor(byte b1, byte b2) {
-        return (byte) ((0xff & ((int) b1 ^ ((int) b2))));
+        return (byte) ((0xff & (((int) b1) ^ ((int) b2))));
     }
 }
