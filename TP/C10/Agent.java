@@ -22,4 +22,8 @@ public class Agent {
     public int getKey() {
         return key;
     }
+
+    public String toString() {
+        return String.format("Agent %d: %d", id, key);
+    }
 }
