@@ -15,7 +15,7 @@ public class Main {
      * @param m
      * @return
      */
-    public static int[] generate(int k, int m) {
+    public static int[] generate(int m, int k) {
         int[] gen = new int[k + 1];
 
         BigInteger bi = BigInteger.valueOf(m + 1);
@@ -55,43 +55,49 @@ public class Main {
      * @param agents
      * @return
      */
-    public static int coalition(int p, int k, Agent... agents) {
+    public static int coalition(int p, int k, Agent[] agents) {
         if (agents.length < k + 1) {
             System.out.println("Not enough agents.");
             System.exit(0);
         }
 
         int s = 0;
-        for (int i = 0; i < agents.length; i++) {
-            int numerator = 0;
-            int denominator = 0;
+        for (int i = 1; i <= k+1; i++) {
+            System.out.println(i);
+            int numerator = 1;
+            int denominator = 1;
 
             // Lagrange Formula
-            for (int j = 0; j < agents.length; j++) {
+            for (int j = 1; j <= k+1; j++) {
                 if (j != i) {
                     numerator *= -j;
                     denominator *= i - j;
                 }
             }
-            s = agents[i].getKey() * numerator / denominator;
+            s += agents[i-1].getKey() * numerator / denominator;
         }
 
         return s;
     }
 
     public static void main(String[] args) {
-        int[] gen = generate(5, n);
+        int k = 7;
+        int s = 200;
+
+        int[] gen = generate(n, k);
+
+        System.out.println(gen[0]);
 
         System.out.println("Generated Polynomial :");
-        Polynomial p = new Polynomial(gen, 120);
+        Polynomial p = new Polynomial(gen, s);
         System.out.println(p);
 
-        distribute(n, 5, gen, 120);
+        distribute(n, k , gen, s);
         System.out.println("Value given to agents :");
         for (Agent agent : agents)
             System.out.println(agent);
 
-        System.out.println("Coalition's result :" + String.valueOf(coalition(gen[0], 5, agents)));
+        System.out.println("Coalition's result :" + String.valueOf(coalition(gen[0], k, agents)));
 
     }
 }
