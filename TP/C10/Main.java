@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Main {
 
-    private static int n = 10;
+    private static int n = 20; // total people
     private static Agent[] agents;
 
     /**
@@ -12,14 +12,18 @@ public class Main {
      * p needs s :thinking:
      * 
      * @param k
-     * @param m
      * @return
      */
-    public static int[] generate(int m, int k) {
+    public static int[] generate(int k) { 
+        // we wanna generate a huge prime number
+        // higher than 2^n so any polynomial algorithm cannot break our polynomial
+        // this number is stored as the 0-th element of our returned array
+        // the next elements are randomly generated numbers within 0 and this high prime
+        // they represent the coefficients of the polynomial
         int[] gen = new int[k + 1];
 
-        BigInteger bi = BigInteger.valueOf(m + 1);
-        while (!bi.isProbablePrime(100) && bi.compareTo(BigInteger.valueOf((int) Math.pow(2, n))) < 0) {
+        BigInteger bi = BigInteger.valueOf((long) (n + 1));
+        while (!bi.isProbablePrime(100) && (bi.compareTo(BigInteger.valueOf((int) Math.pow(2, n))) == -1)) {
             bi = bi.add(BigInteger.ONE);
         }
 
@@ -35,13 +39,14 @@ public class Main {
 
     /**
      * 
+     * @param p
      * @param m
-     * @param k   ???
-     * @param gen
-     * @param s
      */
-    public static void distribute(int m, int k, int[] gen, int s) {
-        Polynomial p = new Polynomial(gen, s);
+    public static void distribute(Polynomial p, int m) {
+        // allocates the right size of the agent array
+        // creates each agent
+        // tells each agent about his key : 
+        // the value of the polynomial evaluated at their index
         agents = new Agent[m];
         for (int i = 0; i < m; i++) {
             agents[i] = new Agent(i + 1, p.eval(i + 1));
@@ -50,20 +55,19 @@ public class Main {
 
     /**
      * 
-     * @param p      ???
      * @param k
      * @param agents
      * @return
      */
-    public static int coalition(int p, int k, Agent[] agents) {
+    public static BigInteger coalition(int k, Agent[] agents) {
         if (agents.length < k + 1) {
             System.out.println("Not enough agents.");
             System.exit(0);
         }
 
-        int s = 0;
+        BigInteger s = BigInteger.ZERO;
         for (int i = 1; i <= k+1; i++) {
-            System.out.println(i);
+            System.out.println("Current coalition iteration : " + i);
             int numerator = 1;
             int denominator = 1;
 
@@ -74,30 +78,34 @@ public class Main {
                     denominator *= i - j;
                 }
             }
-            s += agents[i-1].getKey() * numerator / denominator;
+            BigInteger i_term = agents[i-1].getKey();
+            i_term = i_term.multiply(BigInteger.valueOf(numerator));
+            i_term = i_term.divide(BigInteger.valueOf(denominator));
+            s = s.add(i_term);
         }
 
         return s;
     }
 
     public static void main(String[] args) {
-        int k = 7;
+        int k = 11; // k out of n required, 11 seems to be the maximum BigInteger can handle, with regular integers it is 7
         int s = 200;
 
-        int[] gen = generate(n, k);
+        int[] gen = generate(k); // We generate a random array of coefficients, and specify what the minimal amount of people required to break the secret should be
 
-        System.out.println(gen[0]);
+        System.out.println("gen[0] : " + gen[0]); // our high prime
+        // defines the size of the finite corpse we are working with
 
         System.out.println("Generated Polynomial :");
-        Polynomial p = new Polynomial(gen, s);
+        Polynomial p = new Polynomial(gen, s); // the gen array gives all the coefficients of the polynomial, except for the constant coefficient which is our secret s.
         System.out.println(p);
 
-        distribute(n, k , gen, s);
-        System.out.println("Value given to agents :");
+        distribute(p, n); // We share the partial information among the agents
+        System.out.println("Values given to agents :");
         for (Agent agent : agents)
             System.out.println(agent);
 
-        System.out.println("Coalition's result :" + String.valueOf(coalition(gen[0], k, agents)));
+        System.out.println("Coalition result : " + String.valueOf(coalition(k, agents)));
 
     }
 }

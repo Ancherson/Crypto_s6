@@ -1,3 +1,5 @@
+import java.math.BigInteger;
+
 public class Polynomial {
     private int degree;
     private int[] coeff;
@@ -24,10 +26,14 @@ public class Polynomial {
         }
     }
 
-    public int eval(int value) {
-        int result = 0;
+    public BigInteger eval(int value) {
+        BigInteger result = BigInteger.ZERO;
+        BigInteger valPower = BigInteger.ONE;
         for (int i = 0; i < coeff.length; i++) {
-            result += coeff[i] * Math.pow(value, i);
+            BigInteger i_term = BigInteger.valueOf(coeff[i]); // coeff[i]
+            i_term = i_term.multiply(valPower); // coeff[i] * val^i
+            result = result.add(i_term);
+            valPower = valPower.multiply(BigInteger.valueOf(value)); // increment exponant
         }
         return result;
     }
@@ -77,7 +83,7 @@ public class Polynomial {
         s += String.valueOf(coeff[0]);
 
         for (int i = 1; i < coeff.length; i++) {
-            s += "+ " + String.valueOf(coeff[i]) + "X^" + String.valueOf(i);
+            s += " + " + String.valueOf(coeff[i]) + "X^" + String.valueOf(i);
         }
 
         return s;

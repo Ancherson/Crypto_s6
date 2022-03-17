@@ -1,6 +1,8 @@
+import java.math.BigInteger;
+
 public class Agent {
     private final int id;
-    private final int key;
+    private final BigInteger key;
 
     /**
      * An agent has an id and a key
@@ -8,7 +10,7 @@ public class Agent {
      * @param id
      * @param key
      */
-    public Agent(int id, int key) {
+    public Agent(int id, BigInteger key) {
         this.id = id;
         this.key = key;
     }
@@ -18,12 +20,11 @@ public class Agent {
         return id;
     }
 
-    // Setters
-    public int getKey() {
+    public BigInteger getKey() {
         return key;
     }
 
     public String toString() {
-        return String.format("Agent %d: %d", id, key);
+        return String.format("Agent %d : %d", id, key.longValue());
     }
 }
