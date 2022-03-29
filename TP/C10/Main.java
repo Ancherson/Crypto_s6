@@ -14,7 +14,7 @@ public class Main {
      * @param k
      * @return
      */
-    public static int[] generate(int k) { 
+    public static int[] generate(int k) {
         // we wanna generate a huge prime number
         // higher than 2^n so any polynomial algorithm cannot break our polynomial
         // this number is stored as the 0-th element of our returned array
@@ -45,7 +45,7 @@ public class Main {
     public static void distribute(Polynomial p, int m) {
         // allocates the right size of the agent array
         // creates each agent
-        // tells each agent about his key : 
+        // tells each agent about his key :
         // the value of the polynomial evaluated at their index
         agents = new Agent[m];
         for (int i = 0; i < m; i++) {
@@ -66,19 +66,19 @@ public class Main {
         }
 
         BigInteger s = BigInteger.ZERO;
-        for (int i = 1; i <= k+1; i++) {
+        for (int i = 1; i <= k + 1; i++) {
             System.out.println("Current coalition iteration : " + i);
             int numerator = 1;
             int denominator = 1;
 
             // Lagrange Formula
-            for (int j = 1; j <= k+1; j++) {
+            for (int j = 1; j <= k + 1; j++) {
                 if (j != i) {
                     numerator *= -j;
                     denominator *= i - j;
                 }
             }
-            BigInteger i_term = agents[i-1].getKey();
+            BigInteger i_term = agents[i - 1].getKey();
             i_term = i_term.multiply(BigInteger.valueOf(numerator));
             i_term = i_term.divide(BigInteger.valueOf(denominator));
             s = s.add(i_term);
@@ -88,16 +88,31 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        int k = 11; // k out of n required, 11 seems to be the maximum BigInteger can handle, with regular integers it is 7
+        if (args.length != 1) {
+            System.err.println("Argument error ! The program takes one number.");
+            return;
+        }
+
+        // k out of n required, 11 seems to be the maximum BigInteger can handle, with
+        // regular integers it is 7
+        int k;
+        try {
+            k = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.err.println("The argument must be a number !");
+            return;
+        }
         int s = 200;
 
-        int[] gen = generate(k); // We generate a random array of coefficients, and specify what the minimal amount of people required to break the secret should be
+        int[] gen = generate(k); // We generate a random array of coefficients, and specify what the minimal
+                                 // amount of people required to break the secret should be
 
         System.out.println("gen[0] : " + gen[0]); // our high prime
         // defines the size of the finite corpse we are working with
 
         System.out.println("Generated Polynomial :");
-        Polynomial p = new Polynomial(gen, s); // the gen array gives all the coefficients of the polynomial, except for the constant coefficient which is our secret s.
+        Polynomial p = new Polynomial(gen, s); // the gen array gives all the coefficients of the polynomial, except for
+                                               // the constant coefficient which is our secret s.
         System.out.println(p);
 
         distribute(p, n); // We share the partial information among the agents
