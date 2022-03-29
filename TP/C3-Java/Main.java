@@ -3,6 +3,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -102,23 +103,26 @@ public class Main {
         // Read the text (file or manual input)
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter a path to a raw file :");
-        String s = sc.nextLine();
+        String T = sc.nextLine();
+
+        // We read the file and stock it in T if it exists
         try {
-            Path path = Paths.get(s);
+            Path path = Paths.get(T);
             if (Files.exists(path)) {
-                // Read the file and stock it in s;
                 Stream<String> lines = Files.lines(path);
-                s = lines.collect(Collectors.joining("\n"));
+                T = lines.collect(Collectors.joining("\n"));
                 lines.close();
+
                 // Normalization : We remove spaces, accents and turn all the characters into
                 // upper case.
-                s = Normalizer.normalize(s, Form.NFD);
-                s = s.replaceAll("[^\\p{ASCII}]", "");
-                s = s.replaceAll("\\W", "");
-                s = s.toUpperCase();
-                System.out.println("Formatted text : \n" + s);
+                T = Normalizer.normalize(T, Form.NFD);
+                T = T.replaceAll("[^\\p{ASCII}]", "");
+                T = T.replaceAll("\\W", "");
+                T = T.toUpperCase();
+
+                System.out.println("Text's length :" + String.valueOf(T.length()));
             } else {
-                System.out.println("The argument must be a path !");
+                System.err.println("The argument must be a path !");
                 sc.close();
                 System.exit(1);
             }
@@ -130,32 +134,58 @@ public class Main {
             sc.close();
         }
 
-        Message mess = E(new Message(s), new Key());
-        s = mess.getMessage();
+        // Minimal text length on which our analysis works
+        System.out.println("Processing...");
+        Random rd = new Random();
+        int length = T.length();
+        while (length != 0) {
+            int positive = 0;
+            for (int k = 0; k < 100; k++) {
+                // Choose a start index randomly
+                int startIndex = 0;
+                if (length != T.length()) {
+                    startIndex = rd.nextInt(T.length() - length);
+                }
+                // Get the substring from startIndex
+                String substring = T.substring(startIndex, startIndex + length);
+                // Encrypt the substring
+                Message mess = E(new Message(substring), new Key());
+                String cyphered = mess.getMessage();
 
-        // Make the frequency tables
-        FreqTable freq = new FreqTable();
-        for (int i = 0; i < s.length(); i++) {
-            freq.add(i % 4, s.charAt(i));
+                // Make the frequency tables
+                FreqTable freq = new FreqTable();
+                for (int i = 0; i < cyphered.length(); i++) {
+                    freq.add(i % 4, cyphered.charAt(i));
+                }
+                // Get the most frequent letter in each table : we associate it with E because
+                // we suppose that the text is in English (or French or Latin)
+                char[] mostFreq = new char[4];
+                mostFreq = freq.getMaxFreq();
+                byte[][] b1 = Utils.toDoubleByte("E");
+
+                byte[][] crackedKey = new byte[4][2];
+
+                for (int i = 0; i < mostFreq.length; i++) {
+                    byte[][] b2 = Utils.toDoubleByte("" + mostFreq[i]);
+                    crackedKey[i][0] = Utils.xor(b1[0][0], b2[0][0]);
+                    crackedKey[i][1] = Utils.xor(b1[0][1], b2[0][1]);
+                }
+
+                Key key = new Key(crackedKey);
+                Message decyphered = D(new Message(cyphered), key);
+                if (decyphered.getMessage().equals(substring)) {
+                    positive++;
+                }
+            }
+
+            if (positive >= 50) {
+                length--;
+                positive = 0;
+            } else {
+                System.out.println("Minimal length :" + length + 1);
+                break;
+            }
         }
-        // Get the most frequent letter in each table : we associate it with E because
-        // we suppose that the text is in English (or French)
-        char[] mostFreq = new char[4];
-        mostFreq = freq.getMaxFreq();
-        byte[][] b1 = Utils.toDoubleByte("E");
-
-        byte[][] crackedKey = new byte[4][2];
-
-        for (int i = 0; i < mostFreq.length; i++) {
-            byte[][] b2 = Utils.toDoubleByte("" + mostFreq[i]);
-            crackedKey[i][0] = Utils.xor(b1[0][0], b2[0][0]);
-            crackedKey[i][1] = Utils.xor(b1[0][1], b2[0][1]);
-        }
-
-        Key k = new Key(crackedKey);
-        Message m = new Message(s);
-        System.out.println("Deciphered message :");
-        D(m, k).printMessage();
     }
 
     /**

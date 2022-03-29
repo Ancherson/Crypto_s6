@@ -13,4 +13,4 @@ Then you can just execute
     --ex3 : executes code for exercice 3
     --all : executes exercices 1 and 3
 
-**DISCLAIMER : USING longText.txt ON EXERCICE 3 NEEDS ENOUGH MEMORY. ACCORDING TO OUR TESTS,IT TAKES around 1.5GB!**
+**DISCLAIMER : USING longText.txt ON EXERCICE 3 NEEDS ENOUGH MEMORY AND TAKES A LOT OF TIME. WE RECOMMEND YOU TO TEST ON mediumText.txt**
