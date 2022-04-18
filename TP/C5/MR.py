@@ -75,23 +75,20 @@ def isProbablyPrime(n, likelihood=99):
             return False
     return True
 
-print(quickModularExponent(78, 4567, 154))
+''' 
+    TESTS
+'''
+def main() :
+    print(quickModularExponent(78, 4567, 154))
 
-print(miller_rabin(33, 4, 2)) # 33 is 2*2^4 + 1
-print(miller_rabin(31, 1, 15)) # 31 is 15*2^1 + 1
-print(miller_rabin(17, 3, 2)) # 17 is 2*2^3 + 1
-print(miller_rabin(3, 1, 1)) # 3 is 1*2^1 + 1 ???
+    print(miller_rabin(33, 4, 2)) # 33 is 2*2^4 + 1
+    print(miller_rabin(31, 1, 15)) # 31 is 15*2^1 + 1
+    print(miller_rabin(17, 3, 2)) # 17 is 2*2^3 + 1
+    print(miller_rabin(3, 1, 1)) # 3 is 1*2^1 + 1 ???
 
-print(isProbablyPrime(3))
-print(isProbablyPrime(17))
-print(isProbablyPrime(31))
+    print(isProbablyPrime(3))
+    print(isProbablyPrime(17))
+    print(isProbablyPrime(31))
 
-def generate():
-    pass
-
-def encrypt(msg, key):
-    pass
-
-def decrypt(msg, key):
-    pass
-
+if __name__ == "__main__":
+    main()
