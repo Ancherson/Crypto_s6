@@ -1,16 +1,17 @@
 import random
 from Crypto.Cipher import AES
 from C5.RSA import generate_RSA
+from TP.C5.MR import quickModularExponent
 
-cipher = AES.new(random.randbytes(16))
+aes = AES.new(random.randbytes(16))
 
 '''
     Davies-Meyer's compressing function
 '''
 
 
-def davies_meyer(x, y):
-    return
+def davies_meyer(B, H):
+    return str(ord(aes.encrypt(B)) ^ ord(H))
 
 
 '''
@@ -19,6 +20,14 @@ def davies_meyer(x, y):
 
 
 def hash_merkle_damguard(text):
+    cyphered = "0000000000000000"
+    Hi = "0000000000000000"
+
+    for k in range(16, text.len(), 16):
+        Bi = text[k:k+15]
+        Hi = davies_meyer(Bi, Hi)
+        cyphered += Hi
+
     return
 
 
@@ -32,7 +41,7 @@ def sign_RSA(text):
     cyphered = hash_merkle_damguard(text)
 
     # keys[1] = (d,n)
-    signature = pow(cyphered, keys[1][0]) % keys[1][1]
+    signature = quickModularExponent(int(cyphered), keys[1][0], keys[1][1])
     return signature
 
 
@@ -46,4 +55,4 @@ def sign_RSA(text):
 
 
 def verify_RSA(text, sign, pub_key):
-    return hash_merkle_damguard(text) == pow(sign, pub_key[1]) % pub_key[0]
+    return hash_merkle_damguard(text) == quickModularExponent(sign, pub_key[1], pub_key[0])
