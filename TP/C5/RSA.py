@@ -1,7 +1,13 @@
 from re import M
-from MR import isProbablyPrime,quickExponent
+from MR import isProbablyPrime,quickModularExponent
 from math import gcd
 import random
+
+'''
+    Global variables for key size
+'''
+min = 64
+max = 128
 
 '''
     Generates a prime number. Uses Miller-Rabin as primality test.
@@ -9,15 +15,10 @@ import random
         - a minimal power of 2 min
         - a maximal power of 2 max
 '''
-def generate_prime(min,max):
-    if (min > max) : 
-        min,max = max,min
-    elif min == max :
-        max = min+1
-
+def generate_prime():
     r = random.randint(2**min, 2**max)
     while(not isProbablyPrime(r)) :
-        r = random.randint(2**64,2**128)
+        r = random.randint(2**min,2**max)
     return r
 
 '''
@@ -67,8 +68,10 @@ def find_inverse(e,phi):
     Returns :
         A list [(n,e),(d,n)] containing the public and the private keys
 '''
-def generate_RSA(min,max):
+def generate_RSA():
     p,q = generate_prime(min,max),generate_prime(min,max)
+    if (q==p) :
+        q = generate_prime(min,max)
 
     n = p*q
     phi = (p-1) * (q-1)
@@ -89,7 +92,7 @@ def generate_RSA(min,max):
 def encrypt_RSA(msg, key):
     cyphered = ""
     for c in msg:
-        cyphered += chr(quickExponent(ord(c),key[1]) % key[0])
+        cyphered += chr(quickModularExponent(ord(c),key[1],key[0]))
 
     return cyphered
 
@@ -105,7 +108,7 @@ def encrypt_RSA(msg, key):
 def decrypt_RSA(msg, key):
     raw = ""
     for c in msg:
-        raw += chr(quickExponent(ord(c),key[0]) % key[1])
+        raw += chr(quickModularExponent(ord(c),key[0],key[1]))
     
     return raw
 
@@ -113,7 +116,7 @@ def decrypt_RSA(msg, key):
     TESTS
 '''
 def main() : 
-    print(generate_RSA(4,8))
+    # TODO
     return
 
 if __name__ == "__main__" :

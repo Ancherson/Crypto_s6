@@ -14,4 +14,5 @@ def stuffing(rawtext):
     return
 
 def encrypt_hybrid():
+    
     return
