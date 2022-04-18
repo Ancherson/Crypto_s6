@@ -1,6 +1,7 @@
 import random as rd
 from math import *
 
+
 def max_pui_deux(n):
     if n == 0:
         return 0
@@ -8,6 +9,14 @@ def max_pui_deux(n):
     while n % i != 0:
         i *= 2
     return i
+
+
+'''
+    Compute x^n
+    Parameters :
+    - A number x
+    - A power n
+'''
 
 
 def quickExponent(x, n):
@@ -23,6 +32,16 @@ def quickExponent(x, n):
         return x
     # Heredity
     return quickExponent(x, n//2) * quickExponent(x, n - n//2)
+
+
+'''
+    Compute x^n %m
+    Parameters :
+        - A number x
+        - A power n
+        - A modulus m
+'''
+
 
 def quickModularExponent(x, n, m):
     # Base x cases
@@ -40,6 +59,7 @@ def quickModularExponent(x, n, m):
         return 1
     # Heredity
     return (quickModularExponent(x, n//2, m) * quickModularExponent(x, n - n//2, m)) % m
+
 
 def miller_rabin(n, k, m):
     if n == 1:
@@ -60,11 +80,8 @@ def miller_rabin(n, k, m):
 def isProbablyPrime(n, likelihood=99):
     k = max_pui_deux(n-1)
     m = int((n-1)/(quickExponent(2, k)))
-    print(n)
-    print(k)
-    print(m)
     # Base error rate for a single miller-rabin test is about 1/4.
-    # So false-positive probability after j tests is 1 - 4^(-j) 
+    # So false-positive probability after j tests is 1 - 4^(-j)
     # To reach the given likelihood l, we need 1 - 4^(-j) >= l/100
     # 4^(-j) <= (100-l)/100
     # -j <= log4(100 - l) - log4(100)
@@ -75,20 +92,24 @@ def isProbablyPrime(n, likelihood=99):
             return False
     return True
 
+
 ''' 
     TESTS
 '''
-def main() :
+
+
+def main():
     print(quickModularExponent(78, 4567, 154))
 
-    print(miller_rabin(33, 4, 2)) # 33 is 2*2^4 + 1
-    print(miller_rabin(31, 1, 15)) # 31 is 15*2^1 + 1
-    print(miller_rabin(17, 3, 2)) # 17 is 2*2^3 + 1
-    print(miller_rabin(3, 1, 1)) # 3 is 1*2^1 + 1 ???
+    print(miller_rabin(33, 4, 2))  # 33 is 2*2^4 + 1
+    print(miller_rabin(31, 1, 15))  # 31 is 15*2^1 + 1
+    print(miller_rabin(17, 3, 2))  # 17 is 2*2^3 + 1
+    print(miller_rabin(3, 1, 1))  # 3 is 1*2^1 + 1 ???
 
     print(isProbablyPrime(3))
     print(isProbablyPrime(17))
     print(isProbablyPrime(31))
+
 
 if __name__ == "__main__":
     main()
