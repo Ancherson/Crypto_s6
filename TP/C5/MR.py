@@ -31,7 +31,10 @@ def quickExponent(x, n):
     if n == 1:
         return x
     # Heredity
-    return quickExponent(x, n//2) * quickExponent(x, n - n//2)
+    if (n % 2 == 0):
+        return (quickExponent(x, n//2) ** 2)
+    else:
+        return (quickExponent(x, n//2) ** 2) * x
 
 
 '''
@@ -58,7 +61,10 @@ def quickModularExponent(x, n, m):
     if m == 1:
         return 1
     # Heredity
-    return (quickModularExponent(x, n//2, m) * quickModularExponent(x, n - n//2, m)) % m
+    if (n % 2 == 0):
+        return (quickModularExponent(x, n//2, m) ** 2) % m
+    else:
+        return ((quickModularExponent(x, n//2, m) ** 2) * x) % m
 
 
 def miller_rabin(n, k, m):
