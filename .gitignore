@@ -2,6 +2,5 @@
 /TP/C3-Java/class/*
 /TP/C10/class/*
 
-# Generated pychache folders
-/TP/C3/*pychache*/*
-/TP/C5/*pychache*/*
+# Generated pychache folders /__pychache__/
+TP/*/__pychache__/*

@@ -6,8 +6,8 @@ import random
 '''
     Global variables for key size
 '''
-min = 2**64
-max = 2**128-1
+min = 2**32
+max = 2**64-1
 
 '''
     Generates a prime number. Uses Miller-Rabin as primality test.
@@ -106,15 +106,15 @@ def generate_RSA():
 
 
 def encrypt_RSA(msg, key):
-    binary = bin(ord(msg[0]))
+    binary = bin(msg[0])
     for i in range(1, len(msg)):
-        binary += bin(ord(msg[i]))[2::]
+        binary += bin(msg[i])[2::]
 
     binary = bin(quickModularExponent(int(binary, base=2), key[1], key[0]))
 
     cyphered = ""
     for i in range(2, len(binary), 8):
-        cyphered += chr(binary[i:i+7])
+        cyphered += chr(int(binary[i:i+7], base=2))
     return cyphered
 
 
@@ -130,10 +130,15 @@ def encrypt_RSA(msg, key):
 
 
 def decrypt_RSA(msg, key):
-    raw = ""
-    for c in msg:
-        raw += chr(quickModularExponent(ord(c), key[0], key[1]))
+    binary = bin(msg[0])
+    for i in range(1, len(msg)):
+        binary += bin(msg[i])[2::]
 
+    binary = bin(quickModularExponent(int(binary, base=2), key[0], key[1]))
+
+    raw = ""
+    for i in range(2, len(binary), 8):
+        raw += chr(int(binary[i:i+7], base=2))
     return raw
 
 
@@ -146,12 +151,12 @@ def main():
     print("Generated keys : ")
     k = generate_RSA()
     print(k)
-    print("Encrypt 'HELLO' :")
 
+    print("Encrypt 'HELLO' :")
     m = encrypt_RSA("HELLO", k[0])
     print(m)
 
-    print("Decrypt :")
+    print("Decrypt 'HELLO' : ")
     print(decrypt_RSA(m, k[1]))
 
 

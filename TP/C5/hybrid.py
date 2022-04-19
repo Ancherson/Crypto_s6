@@ -33,13 +33,13 @@ def stuffing(rawtext):
 
 
 def encrypt_hybrid_AES(text, rsa_pubkey):
-    stuffing(text)
 
     k = randbytes(16)
     cyphered_key = encrypt_RSA(k, rsa_pubkey)
 
     aes = AES.new(k)
-    cyphered_message = aes.encrypt(text)
+    stuffing(text)
+    cyphered_message = aes.encrypt(bytearray(text))
 
     return cyphered_key, cyphered_message
 
@@ -100,7 +100,9 @@ def decrypt_DES(text, pub_key):
 
 
 def main():
-    # TODO
+    print("Hybrid Encrypting 'HELLO' : ")
+    k = generate_RSA()
+    print(encrypt_hybrid_AES("HELLO", k[0]))
     return
 
 
