@@ -45,9 +45,9 @@ def find_coprime(phi):
 '''
     Find the phi modular inverse of e using Euclide's algorithm
     Parameters :
-        - The number e 
+        - The number e
         - The modulo phi
-    Returns 
+    Returns
         A number d such as ed = 1 mod phi
 '''
 
@@ -75,7 +75,7 @@ def find_inverse(e, phi):
     Generates public and private keys for RSA
     Parameters :
         None
-    
+
     Returns :
         A list [(n,e),(d,n)] containing the public and the private keys
 '''
@@ -106,10 +106,15 @@ def generate_RSA():
 
 
 def encrypt_RSA(msg, key):
-    cyphered = ""
-    for c in msg:
-        cyphered += chr(quickModularExponent(ord(c), key[1], key[0]))
+    binary = bin(ord(msg[0]))
+    for i in range(1, len(msg)):
+        binary += bin(ord(msg[i]))[2::]
 
+    binary = bin(quickModularExponent(int(binary, base=2), key[1], key[0]))
+
+    cyphered = ""
+    for i in range(2, len(binary), 8):
+        cyphered += chr(binary[i:i+7])
     return cyphered
 
 
@@ -119,7 +124,7 @@ def encrypt_RSA(msg, key):
         - msg : the message to decrypt
         - key : the private key (d,n)
 
-    Returns : 
+    Returns :
         The raw message
 '''
 
