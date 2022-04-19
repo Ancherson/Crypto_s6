@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Main {
 
-    private static int n = 20; // total people
+    private static int n = 10000; // total people
     private static Agent[] agents;
 
     /**
@@ -68,22 +68,22 @@ public class Main {
         BigInteger s = BigInteger.ZERO;
         for (int i = 1; i <= k + 1; i++) {
             System.out.println("Current coalition iteration : " + i);
-            int numerator = 1;
-            int denominator = 1;
+
+            BigInteger numerator = BigInteger.ONE;
+            BigInteger denominator = BigInteger.ONE;
 
             // Lagrange Formula
             for (int j = 1; j <= k + 1; j++) {
                 if (j != i) {
-                    numerator *= -j;
-                    denominator *= i - j;
+                    numerator = numerator.multiply(BigInteger.valueOf(-j));
+                    denominator = denominator.multiply(BigInteger.valueOf((i - j)));
                 }
             }
             BigInteger i_term = agents[i - 1].getKey();
-            i_term = i_term.multiply(BigInteger.valueOf(numerator));
-            i_term = i_term.divide(BigInteger.valueOf(denominator));
+            i_term = i_term.multiply(numerator);
+            i_term = i_term.divide(denominator);
             s = s.add(i_term);
         }
-
         return s;
     }
 
@@ -102,7 +102,7 @@ public class Main {
             System.err.println("The argument must be a number !");
             return;
         }
-        int s = 200;
+        int s = 2000;
 
         int[] gen = generate(k); // We generate a random array of coefficients, and specify what the minimal
                                  // amount of people required to break the secret should be
