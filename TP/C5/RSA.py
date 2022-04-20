@@ -1,4 +1,3 @@
-from re import M
 from MR import isProbablyPrime, quickModularExponent
 from math import gcd
 import random
@@ -6,21 +5,18 @@ import random
 '''
     Global variables for key size
 '''
-min = 2**32
-max = 2**64-1
+byte_size = 8
+
 
 '''
     Generates a prime number. Uses Miller-Rabin as primality test.
-    Parameters :
-        - a minimal power of 2 min
-        - a maximal power of 2 max
 '''
 
 
 def generate_prime():
-    r = random.randint(min, max)
+    r = int.from_bytes(random.randbytes(byte_size), byteorder="little")
     while(not isProbablyPrime(r)):
-        r = random.randint(min, max)
+        r = int.from_bytes(random.randbytes(byte_size), byteorder="little")
     return r
 
 
@@ -73,8 +69,6 @@ def find_inverse(e, phi):
 
 '''
     Generates public and private keys for RSA
-    Parameters :
-        None
 
     Returns :
         A list [(n,e),(d,n)] containing the public and the private keys
@@ -106,22 +100,17 @@ def generate_RSA():
 
 
 def encrypt_RSA(msg, key):
-    binary = bin(msg[0])
-    for i in range(1, len(msg)):
-        binary += bin(msg[i])[2::]
 
-    binary = bin(quickModularExponent(int(binary, base=2), key[1], key[0]))
-
-    cyphered = ""
-    for i in range(2, len(binary), 8):
-        cyphered += chr(int(binary[i:i+7], base=2))
+    cyphered = quickModularExponent(
+        int.from_bytes(bytes(msg, 'UTF-8'), byteorder="little"), key[1], key[0]
+    )
     return cyphered
 
 
 '''
     Decrypt a message using RSA
     Parameters :
-        - msg : the message to decrypt
+        - msg : the message to decrypt in int format
         - key : the private key (d,n)
 
     Returns :
@@ -130,16 +119,9 @@ def encrypt_RSA(msg, key):
 
 
 def decrypt_RSA(msg, key):
-    binary = bin(msg[0])
-    for i in range(1, len(msg)):
-        binary += bin(msg[i])[2::]
-
-    binary = bin(quickModularExponent(int(binary, base=2), key[0], key[1]))
-
-    raw = ""
-    for i in range(2, len(binary), 8):
-        raw += chr(int(binary[i:i+7], base=2))
-    return raw
+    mod = quickModularExponent(msg, key[0], key[1])
+    print(mod)
+    return mod.to_bytes(64, byteorder="little").decode("utf-8")
 
 
 '''
@@ -154,7 +136,7 @@ def main():
 
     print("Encrypt 'HELLO' :")
     m = encrypt_RSA("HELLO", k[0])
-    print(m)
+    print("Encrypted message in int format :%d" % m)
 
     print("Decrypt 'HELLO' : ")
     print(decrypt_RSA(m, k[1]))
