@@ -60,7 +60,7 @@ def encrypt_hybrid_AES(text, rsa_pubkey):
 
 
 def pollard(n):
-    def f(x): return x*x+1
+    f = lambda x : x**2 + 1
     x, y, d = 2, 2, 1
     while d == 1:
         x = f(x) % n
