@@ -3,8 +3,6 @@ from math import gcd
 from RSA import *
 from MR import quickModularExponent
 from Crypto.Cipher import AES
-from Crypto.Cipher import DES
-
 '''
     Bit stuffs a text in order to make its length a multiple of 16
     Parameter :
