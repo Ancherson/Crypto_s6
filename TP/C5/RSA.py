@@ -13,10 +13,10 @@ byte_size = 8
 '''
 
 
-def generate_prime():
-    r = int.from_bytes(random.randbytes(byte_size), byteorder="little")
+def generate_prime(size=byte_size):
+    r = int.from_bytes(random.randbytes(size), byteorder="little")
     while(not isProbablyPrime(r)):
-        r = int.from_bytes(random.randbytes(byte_size), byteorder="little")
+        r = int.from_bytes(random.randbytes(size), byteorder="little")
     return r
 
 
@@ -75,10 +75,16 @@ def find_inverse(e, phi):
 '''
 
 
-def generate_RSA():
-    p, q = generate_prime(), generate_prime()
-    if (q == p):
-        q = generate_prime()
+def generate_RSA(DES=False):
+    if (DES):
+        p = generate_prime(4)
+        q = generate_prime(3)
+        while (q == p):
+            q = generate_prime()
+    else:
+        p, q = generate_prime(), generate_prime()
+        while (q == p and 2**56 > p*q and p*q > 2**57):
+            q = generate_prime()
 
     n = p*q
     phi = (p-1) * (q-1)
