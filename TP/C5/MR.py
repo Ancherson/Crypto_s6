@@ -72,6 +72,8 @@ def miller_rabin(n, k, m):
         return False
     if n == 2:
         return True
+    if n % 2 == 0:
+        return False
     # n = 1 + m*2^k, where m is odd,
     # i.e. 2^k is the highest power of 2 dividing n-1, m being the other factor
     a = rd.randint(2, n-1)

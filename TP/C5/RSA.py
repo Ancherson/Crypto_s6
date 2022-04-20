@@ -5,7 +5,7 @@ import random
 '''
     Global variables for key size
 '''
-byte_size = 8
+byte_size = 16
 
 
 '''
