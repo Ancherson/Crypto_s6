@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Main {
 
-    private static int n = 200; // total people
+    private static int n = 5000; // total people
     private static Agent[] agents;
 
     /**
@@ -99,21 +99,34 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Argument error ! The program takes one number.");
+        if (args.length != 3) {
+            System.err.println("Argument error ! The program takes 3 number. number of agents, secret and number for the coalition");
             return;
         }
 
-        // k out of n required, 11 seems to be the maximum BigInteger can handle, with
+        try {
+            n = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.err.println("The argument "+ args[0] + " must be a number !");
+            return;
+        }
+        int s;
+        try {
+            s = Integer.parseInt(args[1]);
+        } catch (NumberFormatException e) {
+            System.err.println("The argument "+ args[1] + " must be a number !");
+            return;
+        }
+        // k out of n required
         // regular integers it is 7
         int k;
         try {
-            k = Integer.parseInt(args[0]);
+            k = Integer.parseInt(args[2]);
         } catch (NumberFormatException e) {
-            System.err.println("The argument must be a number !");
+            System.err.println("The argument "+ args[2] + " must be a number !");
             return;
         }
-        int s = 90;
+        
 
         int[] gen = generate(k); // We generate a random array of coefficients, and specify what the minimal
                                  // amount of people required to break the secret should be
