@@ -1,7 +1,7 @@
 import random
 from Crypto.Cipher import AES
-from C5.RSA import generate_RSA
-from TP.C5.MR import quickModularExponent
+from RSA import generate_RSA
+from MR import quickModularExponent
 
 aes = AES.new(random.randbytes(16))
 
@@ -56,3 +56,11 @@ def sign_RSA(text):
 
 def verify_RSA(text, sign, pub_key):
     return hash_merkle_damguard(text) == quickModularExponent(sign, pub_key[1], pub_key[0])
+
+
+def main():
+    return
+
+
+if __name__ == "__main__":
+    main()
