@@ -1,0 +1,1 @@
+Suite à la compilation du dm, les test de C5 et C8 devraient se lancer tout seul, tandis que pour C3 ou C10, il vous faudra appeler les fonctions et entrer les bonnes coordonnées, par exemple E(«coucou»,G()).
